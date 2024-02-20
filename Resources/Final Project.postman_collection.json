@@ -1,0 +1,6685 @@
+{
+	"info": {
+		"_postman_id": "a9177205-764b-445a-97d3-2a4fd74dcdaa",
+		"name": "Final Project",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User: CRUD sign-up, login, restricted JWT",
+			"item": [
+				{
+					"name": "/users 200, before add",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"var arr1 = [];",
+									"for (i=0; i<data.length; i++) {",
+									"    arr1.push(data[i].id);",
+									"}",
+									"",
+									"pm.globals.set(\"userArr\", JSON.stringify(arr1));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sign-up Create User3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_3_ID\", pm.response.json().id);",
+									"pm.globals.set(\"user_name_3\", \"info11@shelter.org\");",
+									"",
+									"pm.test(\"User creation successful\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"id\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ABC Animal Home 11\", \n\t\"email\": \"info11@shelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"3 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users 200, after add",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Users list contains same id's plus new user\", function () {",
+									"    // Compare stored ID's to retrieved id's for all but last id",
+									"    var status = \"true\";",
+									"    ",
+									"    // Stored list matches retrieved list of id's",
+									"    var arr1 = JSON.parse(pm.globals.get(\"userArr\"));",
+									"",
+									"    for (i=0; i < arr1.length; i++) {",
+									"        console.log(\"arr1[i]: \" + arr1[i]);",
+									"        console.log(\"data[i].id: \", data[i].id);",
+									"",
+									"        if (arr1[i] != data[i].id) {",
+									"            status = \"false\";",
+									"        }",
+									"    }",
+									"    ",
+									"    // Confirm last id from the retrieved list is \"user_3_ID\"",
+									"    if (data[data.length - 1].id != pm.globals.get(\"user_3_ID\")) {",
+									"        console.log(\"last id: \" + data[data.length - 1].id);",
+									"        status = \"false\";",
+									"    }",
+									"    ",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 401, Delete User3 no auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sign-up Create User7",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_7_ID\", pm.response.json().id);",
+									"pm.globals.set(\"user_name_7\", \"info77@shelter.org\");",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ABC Animal Home 77\", \n\t\"email\": \"info77@shelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"3 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user7",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\",pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info77@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 403, Delete User3, wrong JWT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\",pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info11@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_1_name_NEW\", \"ABC Animal Home 11\");",
+									"pm.globals.set(\"user_1_phone_NEW\", \"999-888-8888\");",
+									"pm.globals.set(\"user_1_address_NEW\", \"77 Town Rd, Town, NY 11111\");",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ABC Animal Home 11\", \n\t\"phone\": \"999-888-8888\",\n\t\"address\": \"77 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 200, after update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"User name, phone, and address are updated\", function () {",
+									"    var status = \"false\";",
+									"    if (data.name === pm.globals.get(\"user_1_name_NEW\") && ",
+									"        data.phone === pm.globals.get(\"user_1_phone_NEW\") &&",
+									"        data.address === pm.globals.get(\"user_1_address_NEW\")) {",
+									"        status = \"true\";",
+									"    }",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/{{user_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users 200, before delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"var arr1 = [];",
+									"for (i=0; i<data.length; i++) {",
+									"    arr1.push(data[i].id);",
+									"}",
+									"",
+									"pm.globals.set(\"userArr\", JSON.stringify(arr1));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users  200, after delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"pm.test(\"Users list contains same id's minus deleted user\", function () {",
+									"    // Compare stored ID's to retrieved id's for all but last id",
+									"    var status = \"true\";",
+									"    ",
+									"    if (data.length > 0) {",
+									"        // Stored list matches retrieved list of id's minus last entry in stored array",
+									"        var arr1 = JSON.parse(pm.globals.get( \"userArr\"));",
+									"        for (i=0; i < arr1.length - 1; i++) {",
+									"            if (arr1[i] != data[i].id) {",
+									"                status = \"true\";",
+									"            }",
+									"        }",
+									"        ",
+									"        if (data[data.length - 1].id === pm.globals.get(\"user_3_ID\")) {",
+									"            status = \"false\";",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user7",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\",pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info77@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User7",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_7_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_7_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users  200, after delete Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"pm.test(\"Users list contains same id's minus deleted user\", function () {",
+									"    // Compare stored ID's to retrieved id's for all but last id",
+									"    var status = \"true\";",
+									"    ",
+									"    if (data.length > 0) {",
+									"        // Stored list matches retrieved list of id's minus last entry in stored array",
+									"        var arr1 = JSON.parse(pm.globals.get( \"userArr\"));",
+									"        for (i=0; i < arr1.length - 1; i++) {",
+									"            if (arr1[i] != data[i].id) {",
+									"                status = \"true\";",
+									"                console.log(\"arr1[i]: \" + arr1[i]);",
+									"                console.log(\"data[i].id: \", data[i].id);",
+									"            }",
+									"        }",
+									"        ",
+									"        if (data[data.length - 1].id === pm.globals.get(\"user_3_ID\")) {",
+									"            status = \"false\";",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Animal: CRU _ restricted JWT",
+			"item": [
+				{
+					"name": "/sign-up create User1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_1_ID\", pm.response.json().id);",
+									"pm.globals.set(\"user_1_name\", \"info22@shelter.org\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ABC Animal Home 22\", \n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"3 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 200, before add",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"var arr1 = [];",
+									"for (i=0; i<data.length; i++) {",
+									"    arr1.push(data[i].id);",
+									"}",
+									"",
+									"pm.globals.set(\"animalArr\", JSON.stringify(arr1));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_1_ID\", pm.response.json().id);",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Boots\",\n\t\"species\": \"cat\", \n\t\"weight\": \"8\", \n\t\"age\": \"2\", \n\t\"color\": \"brown and orange\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 200, after add",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Animals list contains same id's plus new animal\", function () {",
+									"    var status;",
+									"    var status1 = \"false\";",
+									"    var status2 = \"false\";",
+									"    ",
+									"    // Confirm length + 1",
+									"    var arr1 = JSON.parse(pm.globals.get(\"animalArr\"));",
+									"    if (data.length === arr1.length + 1) {status1 = \"true\";}",
+									"    // Confirm \"animal_1_ID\" is present",
+									"    for (i=0; i < data.length; i++) {",
+									"        if (data[i].id === pm.globals.get(\"animal_1_ID\").toString()) {status2 = \"true\";}",
+									"    }",
+									"    ",
+									"    if (status1 === \"true\" && status2 === \"true\") {status = \"true\";} ",
+									"    else {status = \"false\";}",
+									"",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//  setTimeout(function(){}, 1000); "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 401, Add Animal1 no auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Boots\",\n\t\"species\": \"cat\", \n\t\"weight\": \"8\", \n\t\"age\": \"2\", \n\t\"color\": \"brown and orange\", \n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, Get Animal1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Get animal by id returns new animal id\", function () {",
+									"    // Confirm last id from retrieved data is \"animal_1_ID\"",
+									"    var status = \"true\";",
+									"    if (data.id != pm.globals.get(\"animal_1_ID\")) {",
+									"        status = \"false\";",
+									"    }",
+									"    pm.expect(status).to.eql('true');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Newly created animal has self link\", function () {",
+									"    var status = \"false\";",
+									"    var a = pm.environment.get(\"URL_prod\") + \"/animals/\" + pm.globals.get(\"animal_1_ID\");",
+									"    // console.log(\"data.self: \" + data.self);",
+									"    // console.log(\"should match: \" + a);",
+									"    if (data.self === a) {",
+									"        status = \"true\";",
+									"    }",
+									"    pm.expect(status).to.eql('true');",
+									"});",
+									"",
+									"pm.test(\"Newly created animal has owner\", function () {",
+									"    pm.expect(data.owner).to.eql(pm.globals.get(\"user_1_name\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_1_weight_NEW\", \"10\");",
+									"pm.globals.set(\"animal_1_age_NEW\", \"3\");",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Boots\",\n\t\"species\": \"cat\", \n\t\"weight\": \"10\", \n\t\"age\": \"3\", \n\t\"color\": \"brown and orange\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, after update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Animal name, email, phone, and address are updated\", function () {",
+									"    var status = \"false\";",
+									"    if (data.weight === pm.globals.get(\"animal_1_weight_NEW\") && ",
+									"        data.age === pm.globals.get(\"animal_1_age_NEW\")) {",
+									"        status = \"true\";",
+									"    }",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User: _ R _ _ User's animal, restricted JWT",
+			"item": [
+				{
+					"name": "/users/:id/animals 200",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains animal(s)\", function () {",
+									"    var status = \"false\";",
+									"    if (pm.response.json().length >= 1) {",
+									"        status = \"true\";",
+									"    }",
+									"    pm.expect(status === \"true\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/{{user_1_ID}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_1_ID}}",
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sign-up create User2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_2_ID\", pm.response.json().id);",
+									"pm.globals.set(\"user_2_name\", \"info33@shelter.org\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ABC Animal Home 33\", \n\t\"email\": \"info33@shelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"3 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info33@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id/animals 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/{{user_1_ID}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_1_ID}}",
+								"animals"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT, DELETE user-animal relationship",
+			"item": [
+				{
+					"name": "/sign-up create user4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_4_ID\", pm.response.json().id);",
+									"pm.globals.set(\"user_4_name\", \"info44@shelter.org\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ABC Animal Home 44\", \n\t\"email\": \"info44@shelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"3 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info44@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_2_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Pebbles\",\n\t\"species\": \"dog\", \n\t\"weight\": \"45\", \n\t\"age\": \"16\", \n\t\"color\": \"black\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, animal2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Animal's owner is user4\", function () {",
+									"    pm.expect(data.owner).to.eql(pm.globals.get(\"user_4_name\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 403.1, user4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Can't delete user while they own animal. Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_4_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_4_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, animal2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Animal's owner is still user4\", function () {",
+									"    pm.expect(data.owner).to.eql(pm.globals.get(\"user_4_name\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id/animals/:id 204, user5, animal2 Copy Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/{{user_4_ID}}/animals/{{animal_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_4_ID}}",
+								"animals",
+								"{{animal_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, animal2 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Animal's owner is now NULL\", function () {",
+									"    pm.expect(data.owner).to.eql(\"NULL\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id/animals/:id 204, user5, animal2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/{{user_4_ID}}/animals/{{animal_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_4_ID}}",
+								"animals",
+								"{{animal_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, animal2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Animal's owner is now user4\", function () {",
+									"    pm.expect(data.owner).to.eql(pm.globals.get(\"user_4_name\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id/animals/:id 204, user5, animal2 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/{{user_4_ID}}/animals/{{animal_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_4_ID}}",
+								"animals",
+								"{{animal_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, animal2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, user4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Can delete user after it's animal is removed. Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_4_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_4_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Animal: _ _ _ D restricted JWT",
+			"item": [
+				{
+					"name": "/login 201, user2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\",pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info33@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 401, Delete Animal1 no auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 403, Delete Animal1, wrong JWT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\",pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals before delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"var arr1 = [];",
+									"for (i=0; i<data.length; i++) {",
+									"    arr1.push(data[i].id);",
+									"}",
+									"",
+									"pm.globals.set(\"animalArr\", JSON.stringify(arr1));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, Delete Animal1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals after delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"pm.test(\"Animals list contains same id's plus new animal\", function () {",
+									"    var status;",
+									"    var status1 = \"false\";",
+									"    var status2 = \"true\";",
+									"    ",
+									"    // Confirm length + 1",
+									"    var arr1 = JSON.parse(pm.globals.get(\"animalArr\"));",
+									"    if (data.length === arr1.length - 1) {status1 = \"true\";}",
+									"    ",
+									"    // Confirm \"animal_1_ID\" is present",
+									"    for (i=0; i < data.length; i++) {",
+									"        if (data[i].id === pm.globals.get(\"animal_1_ID\").toString()) {status2 = \"false\";}",
+									"    }",
+									"    ",
+									"    if (status1 === \"true\" && status2 === \"true\") {status = \"true\";} ",
+									"    else {status = \"false\";}",
+									"    ",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//  setTimeout(function(){}, 1000); "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Adopter: CRUD",
+			"item": [
+				{
+					"name": "/login 201, user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 200, before add",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"var arr1 = [];",
+									"for (i=0; i<data.length; i++) {",
+									"    arr1.push(data[i].id);",
+									"}",
+									"",
+									"pm.globals.set(\"adopterArr\", JSON.stringify(arr1));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 201, adopter1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_1_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob Loblaw\", \n\t\"email\": \"bobloblaw@lawblog.com\", \n\t\"phone\": \"1-800-888-8888\",\n\t\"address\": \"99 Main St., Johnson City, NY 13444\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 200, after add",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Adopters list contains same id's plus new adopter\", function () {",
+									"    // Compare stored ID's to retrieved id's for all but last id",
+									"    var status = \"true\";",
+									"    ",
+									"    // Stored list matches retrieved list of id's",
+									"    var arr1 = JSON.parse(pm.globals.get(\"adopterArr\"));",
+									"",
+									"    for (i=0; i < arr1.length; i++) {",
+									"        if (arr1[i] != data[i].id) {",
+									"            status = \"false\";",
+									"            console.log(\"arr1[i].id: \" + arr1[i]);",
+									"        }",
+									"    }",
+									"    ",
+									"    // Confirm last id from the retrieved list is \"adopter_1_ID\"",
+									"    if (data[data.length - 1].id != pm.globals.get(\"adopter_1_ID\")) {",
+									"        status = \"false\";",
+									"    }",
+									"    ",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 200",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Get adopter by id returns new adopter id\", function () {",
+									"    // Confirm last id from retrieved data is \"adopter_1_ID\"",
+									"    var status = \"true\";",
+									"    if (data.id != pm.globals.get(\"adopter_1_ID\")) {",
+									"        status = \"false\";",
+									"    }",
+									"    pm.expect(status).to.eql('true');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Newly created adopter has self link\", function () {",
+									"    var status = \"false\";",
+									"    var a = pm.environment.get(\"URL_prod\") + \"/adopters/\" + pm.globals.get(\"adopter_1_ID\");",
+									"    // console.log(\"data.self: \" + data.self);",
+									"    // console.log(\"should match: \" + a);",
+									"    if (data.self === a) {",
+									"        status = \"true\";",
+									"    }",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_1_name_NEW\", \"Bob Loblaw III\");",
+									"pm.globals.set(\"adopter_1_email_NEW\", \"bobloblawIII@lawblog.com\");",
+									"pm.globals.set(\"adopter_1_phone_NEW\", \"633-333-4444\");",
+									"pm.globals.set(\"adopter_1_address_NEW\", \"2000 Main St., Johnson City, NY 13444\");",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob Loblaw III\", \n\t\"email\": \"bobloblawIII@lawblog.com\", \n\t\"phone\": \"633-333-4444\",\n\t\"address\": \"2000 Main St., Johnson City, NY 13444\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 200, after update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Adopter name, email, phone, and address are updated\", function () {",
+									"    var status = \"false\";",
+									"    // console.log(data);",
+									"    if (data.name === pm.globals.get(\"adopter_1_name_NEW\") && ",
+									"        data.email === pm.globals.get(\"adopter_1_email_NEW\") &&",
+									"        data.phone === pm.globals.get(\"adopter_1_phone_NEW\") &&",
+									"        data.address === pm.globals.get(\"adopter_1_address_NEW\")) {",
+									"        status = \"true\";",
+									"    }",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 200, before delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"var arr1 = [];",
+									"for (i=0; i<data.length; i++) {",
+									"    arr1.push(data[i].id);",
+									"}",
+									"",
+									"pm.globals.set(\"adopterArr\", JSON.stringify(arr1));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204, delete adopter1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 200, after delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"data = data.items;",
+									"",
+									"pm.test(\"Adopters list contains same id's minus deleted adopter\", function () {",
+									"    // Compare stored ID's to retrieved id's for all but last id",
+									"    var status = \"true\";",
+									"    ",
+									"    if (data.length > 0) {",
+									"        // Stored list matches retrieved list of id's minus last entry in stored array",
+									"        var arr1 = JSON.parse(pm.globals.get( \"adopterArr\"));",
+									"        for (i=0; i < arr1.length - 1; i++) {",
+									"            if (arr1[i] != data[i].id) {",
+									"                status = \"false\";",
+									"                console.log(\"arr1[i].id: \" + arr1[i]);",
+									"            }",
+									"        }",
+									"        ",
+									"        if (data[data.length - 1].id === pm.globals.get( \"adopter_1_ID\")) {",
+									"            status = \"false\";",
+									"        }",
+									"    }",
+									"",
+									"    pm.expect(status).to.eql('true');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT DELETE adopter-animal relationship",
+			"item": [
+				{
+					"name": "/login 201, user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_3_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Patches\",\n\t\"species\": \"dog\", \n\t\"weight\": \"32\", \n\t\"age\": \"5\", \n\t\"color\": \"brown and grey\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 201, adopter2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_2_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Penny Chase\", \n\t\"email\": \"penny@chase.com\", \n\t\"phone\": \"434-234-4563\",\n\t\"address\": \"4 Parthy Wy., Yellow CA 23456\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id/animals/:id 204, adopter2, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_2_ID}}/animals/{{animal_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_2_ID}}",
+								"animals",
+								"{{animal_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Animal's adopter is adopter2\", function () {",
+									"    // console.log(\"data.adopter: \", data.adopter);",
+									"    var a = pm.globals.get(\"adopter_2_ID\");",
+									"    // console.log(\"adopter_2_ID: \", a);",
+									"    pm.expect(data.adopter).to.eql(a.toString());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id/animals/:id 204, adopter2, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_2_ID}}/animals/{{animal_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_2_ID}}",
+								"animals",
+								"{{animal_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Animal's adopter is now NULL\", function () {",
+									"    pm.expect(data.adopter).to.eql('NULL');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id/animals/:id 204, adopter2, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_2_ID}}/animals/{{animal_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_2_ID}}",
+								"animals",
+								"{{animal_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, animal3 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204, delete adopter2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 200, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()[0];",
+									"",
+									"pm.test(\"Animal's adopter is now NULL\", function () {",
+									"    pm.expect(data.adopter).to.eql('NULL');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cleanup",
+			"item": [
+				{
+					"name": "/login 201, user1 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user2 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\",pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info33@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "404, 405, 406 + reject accept header",
+			"item": [
+				{
+					"name": "/random 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/random",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"random"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sign-up, user3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_3_ID\", pm.response.json().id);",
+									"pm.globals.set(\"user_name_3\", \"info11@shelter.org\");",
+									"",
+									"pm.test(\"User creation successful\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"id\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ABC Animal Home 11\", \n\t\"email\": \"info11@shelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"3 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info11@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users 406",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 406\", function () {",
+									"    pm.response.to.have.status(406);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "appication/atom",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 406",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 406\", function () {",
+									"    pm.response.to.have.status(406);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ogg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/{{user_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 201, adopter1 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_1_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob Loblaw\", \n\t\"email\": \"bobloblaw@lawblog.com\", \n\t\"phone\": \"1-800-888-8888\",\n\t\"address\": \"99 Main St., Johnson City, NY 13444\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 406",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 406\", function () {",
+									"    pm.response.to.have.status(406);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "appication/atom",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 406",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 406\", function () {",
+									"    pm.response.to.have.status(406);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ogg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal1 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_1_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Boots\",\n\t\"species\": \"cat\", \n\t\"weight\": \"8\", \n\t\"age\": \"2\", \n\t\"color\": \"brown and orange\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 406",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 406\", function () {",
+									"    pm.response.to.have.status(406);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "appication/atom"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 406",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 406\", function () {",
+									"    pm.response.to.have.status(406);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/ogg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id/animals/:id 406",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 406\", function () {",
+									"    pm.response.to.have.status(406);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/ogg"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/{{user_3_ID}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_3_ID}}",
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 405",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 405",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id/animals/:id 405",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_1_ID}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_1_ID}}",
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users 405",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 405",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/{{user_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id/animals 405",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/{{adopter_1_ID}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{adopter_1_ID}}",
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id/animals/:id 405",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/{{adopter_1_ID}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{adopter_1_ID}}",
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 405",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 405",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204, delete adopter1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, Delete Animal1 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User3 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pagination /adopters",
+			"item": [
+				{
+					"name": "/sign-up create User1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_1_ID\", pm.response.json().id);",
+									"pm.globals.set(\"user_1_name\", \"info22@shelter.org\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ABC Animal Home 22\", \n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"3 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 201, adopter1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_1_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob Loblaw\", \n\t\"email\": \"bobloblaw@lawblog.com\", \n\t\"phone\": \"1-800-888-8888\",\n\t\"address\": \"99 Main St., Johnson City, NY 13444\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 201, adopter2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_2_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob Loblaw\", \n\t\"email\": \"bobloblaw@lawblog.com\", \n\t\"phone\": \"1-800-888-8888\",\n\t\"address\": \"99 Main St., Johnson City, NY 13444\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 201, adopter3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_3_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob Loblaw\", \n\t\"email\": \"bobloblaw@lawblog.com\", \n\t\"phone\": \"1-800-888-8888\",\n\t\"address\": \"99 Main St., Johnson City, NY 13444\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 201, adopter4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_4_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob Loblaw\", \n\t\"email\": \"bobloblaw@lawblog.com\", \n\t\"phone\": \"1-800-888-8888\",\n\t\"address\": \"99 Main St., Johnson City, NY 13444\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 201, adopter5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_5_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob Loblaw\", \n\t\"email\": \"bobloblaw@lawblog.com\", \n\t\"phone\": \"1-800-888-8888\",\n\t\"address\": \"99 Main St., Johnson City, NY 13444\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 201, adopter6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"adopter_6_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bob Loblaw\", \n\t\"email\": \"bobloblaw@lawblog.com\", \n\t\"phone\": \"1-800-888-8888\",\n\t\"address\": \"99 Main St., Johnson City, NY 13444\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 200, first page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"",
+									"pm.test(\"Only 5 adopters are displayed for 6 existing adopters\", function() {",
+									"    pm.expect(data.items.length === 5).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Next pagination link is present\", function () {",
+									"    pm.expect(Object.keys(data).includes(\"next\"));",
+									"});",
+									"",
+									"pm.test(\"Total items is 6\", function () {",
+									"    pm.expect(data.total === 6).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopters",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters 200, second page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"",
+									"pm.test(\"Only 1 adopter displayed for last of 6 existing adopters\", function() {",
+									"    pm.expect(data.items.length === 1).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Prev pagination link is present\", function () {",
+									"    pm.expect(Object.keys(data).includes(\"prev\"));",
+									"});",
+									"",
+									"pm.test(\"Total items is 6\", function () {",
+									"    pm.expect(data.total === 6).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/adopters?offset=5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters"
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204, adopter1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204, adopter2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204, adopter3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204, adopter4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_4_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_4_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204, adopter5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_5_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_5_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/adopters/:id 204, adopter6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/adopters/{{adopter_6_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"adopters",
+								"{{adopter_6_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pagination /users",
+			"item": [
+				{
+					"name": "/sign-up 201, user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_1_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Humane Shelter\", \n\t\"email\": \"help1@humaneshelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"523 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sign-up 201, user2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_2_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Humane Shelter\", \n\t\"email\": \"help2@humaneshelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"523 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sign-up 201, user3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_3_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Humane Shelter\", \n\t\"email\": \"help3@humaneshelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"523 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sign-up 201, user4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_4_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Humane Shelter\", \n\t\"email\": \"help4@humaneshelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"523 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sign-up 201, user5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_5_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Humane Shelter\", \n\t\"email\": \"help5@humaneshelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"523 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sign-up 201, user6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_6_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Humane Shelter\", \n\t\"email\": \"help6@humaneshelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"523 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users 200, first page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"",
+									"pm.test(\"Only 5 users are displayed for 6 existing users\", function() {",
+									"    pm.expect(data.items.length === 5).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Next pagination link is present\", function () {",
+									"    pm.expect(Object.keys(data).includes(\"next\"));",
+									"});",
+									"",
+									"pm.test(\"Total items is 6\", function () {",
+									"    pm.expect(data.total === 6).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users 200, second page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"",
+									"pm.test(\"Only 1 user displayed for last of 6 existing users\", function() {",
+									"    pm.expect(data.items.length === 1);",
+									"});",
+									"",
+									"pm.test(\"Prev pagination link is present\", function () {",
+									"    pm.expect(Object.keys(data).includes(\"prev\"));",
+									"});",
+									"",
+									"pm.test(\"Total items is 6\", function () {",
+									"    pm.expect(data.total === 6).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users?offset=5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"help1@humaneshelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"help2@humaneshelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"help3@humaneshelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"help4@humaneshelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_4_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_4_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"help5@humaneshelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_5_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_5_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"help6@humaneshelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_6_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_6_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pagination /animals",
+			"item": [
+				{
+					"name": "/sign-up create User1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"user_1_ID\", pm.response.json().id);",
+									"pm.globals.set(\"user_1_name\", \"info22@shelter.org\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ABC Animal Home 22\", \n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\",\n\t\"phone\": \"888-888-8888\",\n\t\"address\": \"3 Town Rd, Town, NY 11111\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/sign-up",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login 201, user1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"id_token\", pm.response.json().id_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"info22@shelter.org\",\n\t\"password\": \"abc12345***\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_1_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Trixie\",\n\t\"species\": \"cat\", \n\t\"weight\": \"20\", \n\t\"age\": \"20\", \n\t\"color\": \"black and white\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_2_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Bobo\",\n\t\"species\": \"cat\", \n\t\"weight\": \"20\", \n\t\"age\": \"20\", \n\t\"color\": \"black and white\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_3_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Chantrel\",\n\t\"species\": \"cat\", \n\t\"weight\": \"20\", \n\t\"age\": \"20\", \n\t\"color\": \"black and white\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_4_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Frodo\",\n\t\"species\": \"cat\", \n\t\"weight\": \"20\", \n\t\"age\": \"20\", \n\t\"color\": \"black and white\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_5_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Kibby\",\n\t\"species\": \"cat\", \n\t\"weight\": \"20\", \n\t\"age\": \"20\", \n\t\"color\": \"black and white\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 201, animal6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"animal_6_ID\", pm.response.json().id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Jaundice\",\n\t\"species\": \"cat\", \n\t\"weight\": \"20\", \n\t\"age\": \"20\", \n\t\"color\": \"black and white\",\n\t\"adopter\": \"NULL\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 200, first page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"",
+									"pm.test(\"Only 5 animals are displayed for 6 existing animals\", function() {",
+									"    pm.expect(data.items.length === 5).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Next pagination link is present\", function () {",
+									"    pm.expect(Object.keys(data).includes(\"next\"));",
+									"});",
+									"",
+									"pm.test(\"Total items is 6\", function () {",
+									"    pm.expect(data.total === 6).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals 200, second page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"",
+									"pm.test(\"Only 1 animal displayed for last of 6 existing animals\", function() {",
+									"    pm.expect(data.items.length === 1).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Prev pagination link is present\", function () {",
+									"    pm.expect(Object.keys(data).includes(\"prev\"));",
+									"});",
+									"",
+									"pm.test(\"Total items is 6\", function () {",
+									"    pm.expect(data.total === 6).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/animals?offset=5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals"
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, animal1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, animal2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_2_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, animal3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_3_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_3_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, animal4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_4_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_4_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, animal5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_5_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_5_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/animals/:id 204, animal6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/animals/{{animal_6_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"animals",
+								"{{animal_6_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:id 204, Delete User1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{id_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{user_1_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{user_1_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
